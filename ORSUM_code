@@ -1,0 +1,71 @@
+Paramter:
+
+configs/mask_rcnn/mask_rcnn_r50_fpn_1x_coco.py 
+	'../_base_/datasets/laboro_tomato_instance.py' --> dataset_type = 'LaboroTomato'  and data_root = 'data/laboro_tomato/'
+	
+	
+	
+	???
+	mmdet/datasets/laboro_tomato.py
+	mmdet/datasets/__init__.py 
+	
+	
+LaboroTomato
+
+from .laboro_tomato import LaboroTomato
+
+	  File "tools/analysis_tools/analyze_results.py", line 199, in <module>
+    main()
+  File "tools/analysis_tools/analyze_results.py", line 189, in main
+    dataset = build_dataset(cfg.data.test)
+  File "/mmdetection/mmdet/datasets/builder.py", line 80, in build_dataset
+    dataset = build_from_cfg(cfg, DATASETS, default_args)
+  File "/opt/conda/lib/python3.7/site-packages/mmcv/utils/registry.py", line 45, in build_from_cfg
+    f'{obj_type} is not in the {registry.name} registry')
+KeyError: 'LaboroTomato is not in the dataset registry'
+
+
+
+   cfg.data.test.test_mode = True
+
+    cfg.data.test.pop('samples_per_gpu', 0)
+    cfg.data.test.pipeline = get_loading_pipeline(cfg.data.train.pipeline)
+    dataset = build_dataset(cfg.data.test)
+	
+
+
+
+
+
+
+
+
+
+
+mmdetection/mmdet/core/utils/dist_utils.py
+
+def tensor2obj(tensor):
+    """Deserialize tensor to picklable python object."""
+    return pickle.loads(tensor.cpu().numpy().tobytes())
+    
+    
+    
+
+
+import pickle
+
+
+with open('results.pkl', 'rb') as f:
+    data = pickle.load(f)
+    print(data)
+
+
+results.pkl
+
+python tools/analysis_tools/analyze_results.py \
+       configs/mask_rcnn/mask_rcnn_r50_fpn_1x_coco.py \
+       result.pkl \
+       results \
+       --show
+
+
